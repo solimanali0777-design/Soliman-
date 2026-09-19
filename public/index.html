@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#07090c" />
+  <title>Soly Cognitive v2</title>
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body>
+  <main class="shell">
+    <section class="app" aria-label="Soly Cognitive v2">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark" aria-hidden="true">S</div>
+          <div>
+            <strong>Soly Cognitive v2</strong>
+            <span>Render Edition</span>
+          </div>
+        </div>
+        <div class="header-actions">
+          <div id="providerPill" class="pill pending">جاري فحص المحرك…</div>
+          <div id="memoryPill" class="pill">ذاكرة: 0</div>
+        </div>
+      </header>
+
+      <section class="core-area" aria-live="polite">
+        <div id="livingCore" class="core state-idle">
+          <div class="core-ring"></div>
+          <div class="core-dot"></div>
+        </div>
+        <div id="statusText" class="status">سولي حاضر ومستعد</div>
+      </section>
+
+      <section id="thread" class="thread">
+        <article class="message soly">
+          <div class="bubble">
+            <p>أهلاً يا أبو السيد. دي نسخة Soly Cognitive v2 على Render. جرّب الشات، الصور، الفيديو أو المايك.</p>
+            <button class="speak-btn" type="button" data-speak="أهلاً يا أبو السيد. دي نسخة Soly Cognitive v2 على Render. جرّب الشات، الصور، الفيديو أو المايك." aria-label="اقرأ الرسالة بالصوت">🔊</button>
+          </div>
+        </article>
+      </section>
+
+      <div id="notice" class="notice hidden" role="status"></div>
+
+      <footer class="composer">
+        <div class="mode-row" role="tablist" aria-label="نوع المهمة">
+          <button class="mode active" type="button" data-mode="chat">✦ شات</button>
+          <button class="mode" type="button" data-mode="image">▣ صورة</button>
+          <button class="mode" type="button" data-mode="video">▶ فيديو</button>
+        </div>
+
+        <div class="input-card">
+          <textarea id="prompt" rows="2" placeholder="اسأل سولي في أي حاجة…" aria-label="رسالتك إلى سولي"></textarea>
+          <div class="input-actions">
+            <button id="micBtn" class="circle secondary" type="button" aria-label="استخدام الميكروفون">🎙</button>
+            <button id="sendBtn" class="circle send" type="button" aria-label="إرسال" disabled>➤</button>
+          </div>
+        </div>
+        <div class="hint">Enter للإرسال · Shift+Enter لسطر جديد</div>
+      </footer>
+    </section>
+  </main>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
