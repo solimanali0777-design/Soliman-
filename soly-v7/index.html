@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>SOLY AI PRO — Production V7</title>
+<style>
+:root{--bg:#050811;--panel:#0f172a;--card:#111b31;--line:#26344d;--cyan:#22d3ee;--blue:#3b82f6;--green:#10b981;--amber:#f59e0b;--rose:#fb7185;--txt:#f8fafc;--muted:#94a3b8}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--txt);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial,sans-serif;min-height:100vh}
+header{position:sticky;top:0;z-index:20;background:rgba(5,8,17,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:14px 16px}
+.top{display:flex;align-items:center;gap:12px;max-width:980px;margin:auto}.brand{font-weight:900;font-size:18px}.badge{margin-inline-start:auto;border:1px solid rgba(245,158,11,.35);background:rgba(245,158,11,.13);color:#fbbf24;padding:7px 10px;border-radius:10px;font-weight:900;font-size:12px}
+main{max-width:980px;margin:auto;padding:18px 14px 80px}.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:16px}.tab{border:1px solid var(--line);background:#0b1324;color:var(--muted);padding:12px 8px;border-radius:14px;font-weight:800}.tab.active{color:#001018;background:linear-gradient(135deg,var(--cyan),var(--blue));border-color:transparent}
+.section{display:none}.section.active{display:block}.panel{background:linear-gradient(180deg,rgba(15,23,42,.95),rgba(10,16,31,.95));border:1px solid var(--line);border-radius:22px;padding:18px;margin-bottom:14px;box-shadow:0 16px 60px rgba(0,0,0,.28)}
+h1,h2,h3,p{margin-top:0}.lead{color:var(--muted);font-size:13px;line-height:1.8}.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:720px){.grid{grid-template-columns:1fr}.brand{font-size:16px}}
+.card{background:#07101f;border:1px solid var(--line);border-radius:16px;padding:14px}.card h3{font-size:14px;margin-bottom:10px}.file{width:100%;background:#0a1426;border:1px solid var(--line);color:var(--txt);padding:10px;border-radius:12px}
+.preview{width:100%;max-height:360px;object-fit:contain;margin-top:12px;border-radius:14px;border:1px solid var(--line);background:#000}.audio{width:100%;margin-top:12px}
+.btn{border:0;border-radius:14px;padding:13px 16px;font-weight:900;cursor:pointer}.primary{background:linear-gradient(135deg,var(--green),var(--cyan));color:#00120e}.secondary{background:#16233a;color:#dbeafe;border:1px solid var(--line)}.danger{background:rgba(251,113,133,.12);color:#fda4af;border:1px solid rgba(251,113,133,.25)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.status{flex:1;min-width:180px;background:#07101f;border:1px solid var(--line);border-radius:13px;padding:11px;color:#cbd5e1;font-size:12px}
+.video{display:block;width:100%;max-width:360px;margin:16px auto 0;border:1px solid rgba(16,185,129,.4);border-radius:18px;background:#000}
+.download{display:none;text-decoration:none;text-align:center;margin-top:10px;background:var(--green);color:#00120e;padding:12px;border-radius:13px;font-weight:900}
+.kpi{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.k{background:#07101f;border:1px solid var(--line);padding:12px;border-radius:14px;text-align:center}.k b{display:block;font-size:22px}.pass{color:#34d399}.fail{color:#fb7185}.blocked{color:#fbbf24}.skip{color:#94a3b8}
+.test{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid #1e293b;font-size:12px}.pill{padding:4px 8px;border-radius:8px;font-weight:900}.pill.pass{background:rgba(16,185,129,.13)}.pill.fail{background:rgba(251,113,133,.12)}.pill.blocked{background:rgba(245,158,11,.12)}
+.key{width:100%;background:#07101f;border:1px solid var(--line);color:#fff;padding:12px;border-radius:12px;font-family:monospace}.note{font-size:11px;color:#fbbf24;line-height:1.7}
+.small{font-size:11px;color:var(--muted)}.ok{color:#34d399}.warn{color:#fbbf24}
+</style>
+</head>
+<body>
+<header><div class="top"><div class="brand">SOLY AI PRO</div><span class="small">استوديو إنتاج الأطفال</span><div class="badge">PRODUCTION V7</div></div></header>
+<main>
+<div class="tabs">
+<button class="tab active" data-tab="production">Production</button>
+<button class="tab" data-tab="diagnostics">Diagnostics</button>
+<button class="tab" data-tab="settings">Settings</button>
+</div>
+
+<section id="production" class="section active">
+<div class="panel">
+<h2>إنتاج فيديو حقيقي من صورة + صوت</h2>
+<p class="lead">المسار ده بيشتغل على جهازك مباشرة ومش معتمد على حصة Gemini Image. ارفع صورة وصوت، وبعدها SOLY يجمعهم في فيديو WebM بحركة كاميرا خفيفة.</p>
+<div class="grid">
+<div class="card"><h3>1) صورة المشهد</h3><input id="imgInput" class="file" type="file" accept="image/*"><img id="imgPreview" class="preview" style="display:none"></div>
+<div class="card"><h3>2) الصوت</h3><input id="audioInput" class="file" type="file" accept="audio/*"><audio id="audioPreview" class="audio" controls style="display:none"></audio></div>
+</div>
+<div class="row" style="margin-top:14px">
+<button id="renderBtn" class="btn primary">إنتاج الفيديو الآن</button>
+<button id="clearBtn" class="btn secondary">مسح المدخلات</button>
+<div id="prodStatus" class="status">جاهز للإنتاج</div>
+</div>
+<video id="videoOut" class="video" controls style="display:none"></video>
+<a id="downloadBtn" class="download" download="soly-production-v7.webm">تحميل الفيديو الناتج</a>
+</div>
+</section>
+
+<section id="diagnostics" class="section">
+<div class="panel">
+<h2>Diagnostics</h2>
+<p class="lead">اختبار محلي سريع للمتصفح. ده لا يستهلك Gemini API.</p>
+<div class="kpi">
+<div class="k"><b id="pPass" class="pass">0</b><span class="small">PASS</span></div>
+<div class="k"><b id="pFail" class="fail">0</b><span class="small">FAIL</span></div>
+<div class="k"><b id="pBlocked" class="blocked">0</b><span class="small">BLOCKED</span></div>
+<div class="k"><b id="pSkip" class="skip">0</b><span class="small">SKIP</span></div>
+</div>
+<div id="tests" style="margin-top:10px"></div>
+<button id="diagBtn" class="btn primary" style="margin-top:14px">تشغيل الاختبار المحلي</button>
+</div>
+</section>
+
+<section id="settings" class="section">
+<div class="panel">
+<h2>Gemini Text — اختبار اختياري</h2>
+<p class="lead">المفتاح مؤقت داخل ذاكرة الصفحة فقط، ولا يتم حفظه في localStorage. الاختبار يبدأ بـ Gemini 3.8 Flash ثم 3.7 ثم 3.6 لو حصل ضغط مؤقت.</p>
+<input id="apiKey" class="key" type="password" placeholder="الصق Gemini API Key مؤقتًا">
+<div class="row" style="margin-top:12px">
+<button id="geminiBtn" class="btn primary">اختبار Gemini Text</button>
+<button id="wipeKey" class="btn danger">مسح المفتاح</button>
+<div id="geminiStatus" class="status">لم يتم الاختبار</div>
+</div>
+<p class="note">ملاحظة: توليد الصور غير مستخدم في Production Mode لأن حساب الـAPI الحالي ظهر له quota صور = 0.</p>
+</div>
+</section>
+</main>
+
+<script>
+(function(){
+var imgData=null,audioUrl=null,audioFile=null,videoUrl=null;
+var q=function(id){return document.getElementById(id)};
+document.querySelectorAll(".tab").forEach(function(b){b.onclick=function(){document.querySelectorAll(".tab").forEach(function(x){x.classList.remove("active")});document.querySelectorAll(".section").forEach(function(x){x.classList.remove("active")});b.classList.add("active");q(b.dataset.tab).classList.add("active")}});
+
+q("imgInput").onchange=function(e){var f=e.target.files&&e.target.files[0];if(!f)return;var r=new FileReader();r.onload=function(){imgData=r.result;q("imgPreview").src=imgData;q("imgPreview").style.display="block";q("prodStatus").textContent="تم تحميل الصورة"};r.readAsDataURL(f)};
+q("audioInput").onchange=function(e){var f=e.target.files&&e.target.files[0];if(!f)return;audioFile=f;if(audioUrl)URL.revokeObjectURL(audioUrl);audioUrl=URL.createObjectURL(f);q("audioPreview").src=audioUrl;q("audioPreview").style.display="block";q("prodStatus").textContent="تم تحميل الصوت"};
+
+q("clearBtn").onclick=function(){imgData=null;audioFile=null;if(audioUrl)URL.revokeObjectURL(audioUrl);audioUrl=null;q("imgInput").value="";q("audioInput").value="";q("imgPreview").style.display="none";q("audioPreview").style.display="none";q("videoOut").style.display="none";q("downloadBtn").style.display="none";q("prodStatus").textContent="جاهز للإنتاج"};
+
+q("renderBtn").onclick=async function(){
+if(!imgData){q("prodStatus").textContent="ارفع صورة الأول";return}
+q("prodStatus").textContent="جاري تجهيز الفيديو...";
+try{
+var img=new Image();img.src=imgData;await new Promise(function(res,rej){img.onload=res;img.onerror=function(){rej(new Error("تعذر تحميل الصورة"))}});
+var canvas=document.createElement("canvas");canvas.width=720;canvas.height=1280;var ctx=canvas.getContext("2d");if(!canvas.captureStream||typeof MediaRecorder==="undefined")throw new Error("المتصفح لا يدعم MediaRecorder");
+var vs=canvas.captureStream(30),fs=vs,a=null,ac=null;
+if(audioUrl){a=new Audio(audioUrl);ac=new (window.AudioContext||window.webkitAudioContext)();var src=ac.createMediaElementSource(a),dest=ac.createMediaStreamDestination();src.connect(dest);src.connect(ac.destination);fs=new MediaStream([].concat(vs.getVideoTracks(),dest.stream.getAudioTracks()))}
+var mime="video/webm;codecs=vp9";if(!MediaRecorder.isTypeSupported(mime))mime="video/webm";if(!MediaRecorder.isTypeSupported(mime))mime="";
+var rec=new MediaRecorder(fs,mime?{mimeType:mime}:undefined),chunks=[];rec.ondataavailable=function(e){if(e.data&&e.data.size)chunks.push(e.data)};
+var stopped=new Promise(function(res,rej){rec.onstop=res;rec.onerror=function(e){rej(new Error(e.error&&e.error.message||"MediaRecorder error"))}});
+rec.start(200);if(a){try{await a.play()}catch(e){}}
+var dur=8000;if(a){await new Promise(function(r){if(isFinite(a.duration)&&a.duration>0)r();else{a.onloadedmetadata=r;setTimeout(r,1200)}});dur=Math.max(5000,Math.min(30000,(a.duration||8)*1000))}
+var start=performance.now();await new Promise(function(done){function draw(now){var el=now-start,p=Math.min(1,el/dur),sc=1.02+p*.1,w=720*sc,h=1280*sc,x=(720-w)/2+Math.sin(p*Math.PI)*12,y=(1280-h)/2;ctx.fillStyle="#050811";ctx.fillRect(0,0,720,1280);ctx.drawImage(img,x,y,w,h);ctx.fillStyle="rgba(5,8,17,.62)";ctx.fillRect(0,1120,720,160);ctx.fillStyle="#fff";ctx.font="bold 32px sans-serif";ctx.textAlign="center";ctx.fillText("SOLY AI PRO — Production V7",360,1200);if(el>=dur){done();return}requestAnimationFrame(draw)}requestAnimationFrame(draw)});
+try{rec.stop()}catch(e){}await stopped;if(a)try{a.pause()}catch(e){}vs.getTracks().forEach(function(t){t.stop()});
+var blob=new Blob(chunks,{type:mime||"video/webm"});if(!blob.size)throw new Error("الفيديو الناتج فارغ");if(videoUrl)URL.revokeObjectURL(videoUrl);videoUrl=URL.createObjectURL(blob);q("videoOut").src=videoUrl;q("videoOut").style.display="block";q("downloadBtn").href=videoUrl;q("downloadBtn").style.display="block";q("prodStatus").textContent="تم إنتاج الفيديو بنجاح — "+(blob.size/1024).toFixed(1)+" KB";
+}catch(err){q("prodStatus").textContent="فشل الإنتاج: "+(err&&err.message||err)}
+};
+
+function addTest(name,status,details){var d=document.createElement("div");d.className="test";d.innerHTML="<div><b>"+name+"</b><div class='small'>"+details+"</div></div><span class='pill "+status.toLowerCase()+"'>"+status+"</span>";q("tests").appendChild(d)}
+q("diagBtn").onclick=function(){q("tests").innerHTML="";var pass=0,fail=0,blocked=0,skip=0;function t(name,fn){try{var s=fn();addTest(name,"PASS",s||"OK");pass++}catch(e){addTest(name,"FAIL",e.message||String(e));fail++}}
+t("localStorage",function(){localStorage.setItem("soly_probe","1");var x=localStorage.getItem("soly_probe");localStorage.removeItem("soly_probe");if(x!=="1")throw new Error("read/write failed");return"write/read OK"});
+t("Canvas captureStream",function(){var c=document.createElement("canvas");if(!c.captureStream)throw new Error("unsupported");return"available"});
+t("MediaRecorder",function(){if(typeof MediaRecorder==="undefined")throw new Error("unsupported");return"available"});
+t("Speech synthesis",function(){if(!("speechSynthesis" in window))throw new Error("unsupported");return"available"});
+t("Speech recognition",function(){if(!(window.SpeechRecognition||window.webkitSpeechRecognition))throw new Error("unsupported");return"available"});
+q("pPass").textContent=pass;q("pFail").textContent=fail;q("pBlocked").textContent=blocked;q("pSkip").textContent=skip};
+
+async function geminiCall(model,key){
+var url="https://generativelanguage.googleapis.com/v1beta/models/"+model+":generateContent";
+var body={contents:[{role:"user",parts:[{text:"Reply with exactly SOLY_TEXT_OK and nothing else."}]}],generationConfig:{maxOutputTokens:512,thinkingConfig:{thinkingLevel:"low"}}};
+var r=await fetch(url,{method:"POST",headers:{"Content-Type":"application/json","x-goog-api-key":key},body:JSON.stringify(body),referrerPolicy:"no-referrer",cache:"no-store"});var j=await r.json().catch(function(){return{}});
+if(!r.ok)throw new Error("HTTP "+r.status+": "+(j.error&&j.error.message||"request failed"));
+var parts=j.candidates&&j.candidates[0]&&j.candidates[0].content&&j.candidates[0].content.parts||[];var txt=parts.filter(function(p){return typeof p.text==="string"&&!p.thought}).map(function(p){return p.text}).join("").trim();if(!txt)throw new Error("No visible text");return txt}
+q("geminiBtn").onclick=async function(){var key=q("apiKey").value.trim();if(!key){q("geminiStatus").textContent="حط المفتاح المؤقت الأول";return}q("geminiStatus").textContent="جاري الاختبار...";var models=["gemini-3.8-flash","gemini-3.7-flash","gemini-3.6-flash"],errs=[];for(var i=0;i<models.length;i++){try{var x=await geminiCall(models[i],key);q("geminiStatus").innerHTML="<span class='ok'>PASS</span> — "+models[i]+" — "+x;return}catch(e){errs.push(models[i]+": "+e.message);var m=(e.message||"").toLowerCase();if(!(m.includes("high demand")||m.includes("temporar")||m.includes("unavailable")||m.includes("503")||m.includes("502")))break}}q("geminiStatus").innerHTML="<span class='warn'>BLOCKED/FAIL</span> — "+errs.join(" | ")};
+q("wipeKey").onclick=function(){q("apiKey").value="";q("geminiStatus").textContent="تم مسح المفتاح المؤقت"};
+})();
+</script>
+</body></html>
