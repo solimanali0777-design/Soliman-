@@ -1,0 +1,6 @@
+{
+  "name": "soly-ai-pro-v7",
+  "version": "7.0.0",
+  "private": true,
+  "scripts": { "start": "node server.js" }
+}
