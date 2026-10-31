@@ -140,4 +140,20 @@ for locale in ("values", "values-es"):
     s = dest.read_text(encoding="utf-8")
     if s.count("</resources>") != 1: raise RuntimeError(f"Expected one resources terminator: {dest}")
     dest.write_text(s.replace("</resources>", safe+"</resources>", 1), encoding="utf-8")
-print("Soly Smart Reel source patch applied to pinned upstream")
+# Keep the test build side-by-side with v0.1: GitHub ephemeral debug certificates
+# differ across runners, so sharing an applicationId could block installation.
+gradle = root / "app/build.gradle.kts"
+gradle_text = gradle.read_text(encoding="utf-8")
+old_id = 'applicationId = "com.solycut.videoeditor"'
+if gradle_text.count(old_id) != 1:
+    raise RuntimeError("Soly Cut base application ID not found exactly once")
+gradle.write_text(gradle_text.replace(old_id, 'applicationId = "com.solycut.smartreel"', 1), encoding="utf-8")
+for locale in ("values", "values-es"):
+    values = root / f"app/src/main/res/{locale}/strings.xml"
+    content = values.read_text(encoding="utf-8")
+    old_label = '<string name="app_name">Soly Cut</string>'
+    if content.count(old_label) != 1:
+        raise RuntimeError(f"Expected Soly Cut app_name in {values}")
+    values.write_text(content.replace(old_label, '<string name="app_name">Soly Cut Smart Reel</string>', 1), encoding="utf-8")
+print("Soly Smart Reel source patch applied (isolated package com.solycut.smartreel)")
+
