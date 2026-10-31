@@ -24,6 +24,10 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
+      - name: Set up current Android tools
+        uses: android-actions/setup-android@v4
+        with:
+          packages: ''
       - name: Install Android build SDK
         run: |
           echo "ANDROID_HOME=$ANDROID_HOME"
