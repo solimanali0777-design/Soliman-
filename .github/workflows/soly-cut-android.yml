@@ -1,7 +1,7 @@
 name: Build Soly Cut Android APK
 on:
   push:
-    branches: [soly-cut-ci-20261031]
+    branches: [soly-cut-ci-20261031, soly-cut-v03]
   workflow_dispatch:
 jobs:
   build:
@@ -39,6 +39,14 @@ jobs:
           fi
       - name: Apply isolated branding
         run: python3 solycut/customize.py clearcut
+      - name: Install Soly smart reel test
+        run: |
+          cp solycut/solycut-v03/SolySmartReelPlannerTest.kt clearcut/app/src/test/java/com/novacut/editor/ai/SolySmartReelPlannerTest.kt
+      - name: Focused smart reel policy test
+        working-directory: clearcut
+        run: |
+          chmod +x gradlew
+          ./gradlew :app:testDebugUnitTest --tests 'com.novacut.editor.ai.SolySmartReelPlannerTest' --write-verification-metadata sha256 --no-daemon --stacktrace
       - name: Build debug installable APK
         working-directory: clearcut
         run: |
