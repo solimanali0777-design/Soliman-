@@ -51,7 +51,9 @@ patch(vm,
     "        val proposal = snapshot.autoEditProposal ?: return\n        val isSolyReel = solyReelProposalReady\n        if (isSolyReel && (proposal.plannedDurationMs != 30_000L ||\n            proposal.segments.map { it.clipId }.distinct().size < 5)) {\n            showToast(text(R.string.soly_reel_underfilled))\n            return\n        }\n        val sourceClips")
 patch(vm,
     "        saveUndoState(\\"Apply Auto Edit\\")\\n        _state.update { state ->\\n            recalculateDuration(\\n                state.copy(\\n                    tracks = state.tracks.map { track ->",
-    """            recalculateDuration(
+    """        saveUndoState("Apply Auto Edit")
+        _state.update { state ->
+            recalculateDuration(
                 state.copy(
                     project = if (isSolyReel) state.project.copy(
                         aspectRatio = AspectRatio.RATIO_9_16,
