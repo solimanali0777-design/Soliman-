@@ -43,6 +43,9 @@ jobs:
         working-directory: clearcut
         run: |
           chmod +x gradlew
+          # Build-cache metadata from the pinned upstream may omit new Maven transitive artifacts.
+          # Record SHA256 from fetched Maven artifacts, then enforce verification in the real build.
+          ./gradlew :app:assembleDebug --write-verification-metadata sha256 --no-daemon --stacktrace
           ./gradlew :app:assembleDebug --no-daemon --stacktrace
       - name: Collect APK and SHA256
         run: |
