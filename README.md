@@ -1,16 +1,6 @@
-# Soly Cognitive v2 — Render
-
-Standalone Render deployment for Soly Cognitive v2.
-
-- Node.js web service
-- Egyptian Arabic chat UI
-- Local persistent memory
-- Intent classification and cognitive states
-- xAI provider adapter for chat, image, TTS, and video
-- No secrets are committed to this repository
-
-Render:
-- Build: `npm install`
-- Start: `npm start`
-- Health: `/health`
-- Optional server secret: `XAI_API_KEY`
+# Soly Cut Android (isolated CI branch)
+Experimental, independently signed fork of SysAdminDoc/ClearCut v3.82.0 (MIT).
+No source copy is vendored here: GitHub Actions fetches upstream tag and applies
+a minimal branding patch. Builds debug-signed APKs for sideload testing.
+No changes are made to the Soliman- main branch or unrelated apps.
+Upstream: https://github.com/SysAdminDoc/ClearCut

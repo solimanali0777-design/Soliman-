@@ -1,0 +1,51 @@
+name: Build Soly Cut Android APK
+on:
+  push:
+    branches: [soly-cut-ci-20261031]
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: read
+    steps:
+      - name: Fetch upstream pinned ClearCut
+        uses: actions/checkout@v4
+        with:
+          repository: SysAdminDoc/ClearCut
+          ref: v3.82.0
+          path: clearcut
+      - name: Fetch Soly Cut customization
+        uses: actions/checkout@v4
+        with:
+          path: solycut
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: android-actions/setup-android@v3
+      - name: Install Android build SDK
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager 'platform-tools' 'platforms;android-37' 'build-tools;36.0.0'
+      - name: Apply isolated branding
+        run: python3 solycut/customize.py clearcut
+      - name: Build debug installable APK
+        working-directory: clearcut
+        run: |
+          chmod +x gradlew
+          ./gradlew :app:assembleDebug --no-daemon --stacktrace
+      - name: Collect APK and SHA256
+        run: |
+          mkdir -p out
+          find clearcut/app/build/outputs/apk/debug -type f -name '*.apk' -exec cp {} out/ \;
+          test -n "$(find out -name '*.apk' -print -quit)"
+          (cd out && sha256sum *.apk > SHA256SUMS.txt)
+      - name: Upload APK for download
+        uses: actions/upload-artifact@v4
+        with:
+          name: SolyCut-Android-Debug-APKs
+          path: out/*
+          if-no-files-found: error
+          retention-days: 7
