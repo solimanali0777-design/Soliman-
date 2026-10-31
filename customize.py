@@ -11,6 +11,24 @@ assert 'applicationId = "com.novacut.editor"' in src
 src = src.replace('applicationId = "com.novacut.editor"', 'applicationId = "com.solycut.videoeditor"', 1)
 assert 'buildConfigField("boolean", "UPDATE_CHECK_AVAILABLE", "true")' in src
 src = src.replace('buildConfigField("boolean", "UPDATE_CHECK_AVAILABLE", "true")', 'buildConfigField("boolean", "UPDATE_CHECK_AVAILABLE", "false")', 1)
+# Keep all native libraries/features, compress .so files inside the APK.
+# Android extracts native libs at install instead of loading them directly from the archive.
+anchor = "    signingConfigs {"
+assert anchor in src
+src = src.replace(anchor, "    packaging {\n        jniLibs {\n            useLegacyPackaging = true\n        }\n    }\n\n" + anchor, 1)
+# Match upstream release's R8/shrinker settings on this independently signed debug build.
+old_debug = "        debug {\n            isPseudoLocalesEnabled = true\n        }"
+new_debug = """        debug {
+            isPseudoLocalesEnabled = true
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }"""
+assert old_debug in src
+src = src.replace(old_debug, new_debug, 1)
 gradle.write_text(src, encoding='utf-8')
 resources = list((root / 'app' / 'src' / 'main' / 'res').glob('values*/strings.xml'))
 assert resources
