@@ -42,11 +42,12 @@ jobs:
       - name: Install Soly smart reel test
         run: |
           cp solycut/solycut-v03/SolySmartReelPlannerTest.kt clearcut/app/src/test/java/com/novacut/editor/ai/SolySmartReelPlannerTest.kt
+          python3 solycut/solycut-v03/apply_smart_reel.py clearcut solycut/solycut-v03
       - name: Focused smart reel policy test
         working-directory: clearcut
         run: |
           chmod +x gradlew
-          ./gradlew :app:testDebugUnitTest --tests 'com.novacut.editor.ai.SolySmartReelPlannerTest' --write-verification-metadata sha256 --no-daemon --stacktrace
+          ./gradlew :app:testQaUnitTest --tests 'com.novacut.editor.ai.SolySmartReelPlannerTest' --write-verification-metadata sha256 --no-daemon --stacktrace
       - name: Build debug installable APK
         working-directory: clearcut
         run: |
