@@ -1,0 +1,43 @@
+name: Publish Soly Cut ARM64 APK
+on:
+  push:
+    branches: [soly-cut-ci-20261031]
+    paths:
+      - '.github/workflows/soly-cut-publish.yml'
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download previously compiled APKs
+        uses: actions/download-artifact@v4
+        with:
+          name: SolyCut-Android-Debug-APKs
+          run-id: 41177181903
+          github-token: ${{ github.token }}
+          path: downloaded
+      - name: Prepare Android tools for APK signature check
+        uses: android-actions/setup-android@v4
+        with:
+          packages: 'build-tools;36.0.0'
+      - name: Verify installable ARM64 APK and create SHA256 file
+        run: |
+          set -euo pipefail
+          find downloaded -type f -maxdepth 2 -printf '%p %s bytes\n'
+          APK="$(find downloaded -maxdepth 2 -type f -name '*arm64*.apk' -print -quit)"
+          test -n "$APK"
+          test -s "$APK"
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose "$APK"
+          unzip -t "$APK" | tail -1
+          mkdir -p publish
+          cp "$APK" publish/SolyCut-v0.1-arm64-v8a-debug.apk
+          (cd publish && sha256sum SolyCut-v0.1-arm64-v8a-debug.apk > SHA256SUMS.txt)
+      - name: Publish direct installable APK download
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create soly-cut-v0.1.0-debug             publish/SolyCut-v0.1-arm64-v8a-debug.apk             publish/SHA256SUMS.txt             --repo "$GITHUB_REPOSITORY"             --target "$GITHUB_SHA"             --title "Soly Cut v0.1 — Android ARM64 Preview"             --notes "Debug-signed test build derived from the MIT-licensed ClearCut v3.82.0 source. Independent app ID com.solycut.videoeditor and disabled upstream update checker. Built by GitHub Actions, SHA-256 checksums attached. No real-device editing/export test yet. Not a production release."             --prerelease
