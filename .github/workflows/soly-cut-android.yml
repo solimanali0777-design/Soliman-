@@ -69,8 +69,8 @@ jobs:
       - name: Upload APK for download
         uses: actions/upload-artifact@v4
         with:
-          name: SolyCut-compact-ARM64-only
-          path: out/SolyCut-compact-v0.2-arm64.apk
+          name: SolyCut-v0.3-ARM64-APK
+          path: out/*
           if-no-files-found: error
           retention-days: 1
       - name: Verify and publish Soly Cut v0.3 Preview APK
