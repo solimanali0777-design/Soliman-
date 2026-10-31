@@ -33,7 +33,10 @@ jobs:
           echo "ANDROID_HOME=$ANDROID_HOME"
           command -v sdkmanager
           yes | sdkmanager --licenses >/dev/null || true
-          sdkmanager --install 'platform-tools' 'platforms;android-37' 'build-tools;36.0.0'
+          sdkmanager --install --channel=3 'platform-tools' 'platforms;android-37.0' 'build-tools;36.0.0'
+          if [ -d "$ANDROID_HOME/platforms/android-37.0" ] && [ ! -e "$ANDROID_HOME/platforms/android-37" ]; then
+            ln -s "$ANDROID_HOME/platforms/android-37.0" "$ANDROID_HOME/platforms/android-37"
+          fi
       - name: Apply isolated branding
         run: python3 solycut/customize.py clearcut
       - name: Build debug installable APK
